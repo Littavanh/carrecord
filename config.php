@@ -1,8 +1,8 @@
 <?php
 error_reporting(E_ALL & !E_NOTICE);
 //error_reporting(E_ALL);
-$mysqli = new mysqli("localhost", "roottest", "56588965", "db_car_record");
-// test
+$mysqli = new mysqli("localhost", "root", "56588965", "db_car_record");
+
 /* check connection */
 if ($mysqli->connect_errno) {
     printf("Connect failed: %s\n", $mysqli->connect_error);
