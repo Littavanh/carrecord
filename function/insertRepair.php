@@ -1,0 +1,35 @@
+<?php
+session_start();
+// echo"sjddjda";
+
+$userId = $_SESSION['user_id'];
+$mysqli = new mysqli("localhost", "root", "56588965", "db_car_record");
+$dateNow = date("Y-m-d H:i:s");
+
+$id = $_GET['id'];
+$cb_car_reg = $_GET['cb_car_reg'];
+$txtColor = $_GET['txtColor'];
+$txtMachineNo = $_GET['txtMachineNo'];
+$txtMachineNo1 = $_GET['txtMachineNo1'];
+$txtCompany = $_GET['txtCompany'];
+$total = $_GET['total'];
+/* check connection */
+if ($mysqli->connect_errno) {
+    printf("Connect failed: %s\n", $mysqli->connect_error);
+    exit();
+}
+
+/*----------- function Execute query --------------*/
+
+// mysql_query("SET NAMES 'utf8'");
+$mysqli->set_charset("utf8");
+
+$sql = "INSERT INTO `tb_repair` (`rp_id`, `car_id`, `color`, `machineNo`, `machineNo1`, `company`, `total`, `date_add`, `user_add`)
+  VALUES ('$id', '$cb_car_reg', '$txtColor', '$txtMachineNo', '$txtMachineNo1', '$txtCompany', '$total', '$dateNow', '$userId') ";
+if ($mysqli->query($sql) === TRUE) {
+    // header("Location: ?d=master/product");
+    //   echo '<script>console.log("succesfully")</script>';
+
+} else {
+    echo '<script>alert("error")</script>';
+}

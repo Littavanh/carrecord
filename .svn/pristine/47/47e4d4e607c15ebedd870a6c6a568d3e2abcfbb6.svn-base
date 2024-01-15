@@ -1,0 +1,4 @@
+
+<?php
+   $fetch  = 'SELECT * FROM v_budget WHERE status_id = 1';
+?>

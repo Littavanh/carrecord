@@ -1,0 +1,677 @@
+<?php
+htmltage("Car Record System");
+?>
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>ສັງລວມການນຳໃຊ້ລົດ </h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item active">ລາຍງານ</li>
+                        <li class="breadcrumb-item active">ສັງລວມການນຳໃຊ້ລົດ</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header">
+                        <form method="get">
+                            <input type="hidden" name="d" value="report/rRecordCarAll" />
+                            <div class="row">
+
+
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>ປີ</label>
+                                        <input type="number" min="1900" max="2099" step="1" name="year" class="form-control" autocomplete="off" value="2023" required="required">
+                                    </div>
+                                </div>
+                                <div class="col-md-1">
+                                    <div class="form-group">
+                                        <label>ເດືອນ</label>
+                                        <input type="number" name="month" min="1" max="12" step="1" class="form-control" autocomplete="off" value="<?= $_SESSION['month'] == null ? 1 : $_SESSION['month'] ?>" required="required">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label>ຕາມພາກສ່ວນ</label>
+                                        <select class="form-control" name="cb_bu">
+                                            <?php
+                                            if ($bu_id == 0) {
+                                            ?>
+                                                <option value="0">---ທັງໝົດ---</option>
+                                            <?php
+                                            }
+                                            ?>
+
+                                            <?php
+                                            $bu = "SELECT * FROM tb_business $where";
+                                            if ($result = $mysqli->query($bu)) {
+                                                while ($row = $result->fetch_row()) {
+                                            ?>
+                                                    <option value="<?= $row[0] ?>"><?= $row[1] ?></option>
+                                            <?php }
+                                            } ?>
+
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                            <div class="box-footer">
+                                <button type="reset" class="btn btn-default" onclick="document.location='?d=report/rRecordCarAll'">ຍົກເລີກ</button>
+                                <button type="submit" class="btn btn-primary">ຄົ້ນຫາ</button>
+                                <?php if ($_GET['year'] != '' && $_GET['month'] != '') { ?>
+                                    <a href="report/ex_rRecordCarAll.php?year=<?= $_GET['year'] ?>&month=<?= $_GET['month'] ?>&cb_bu=<?= $_GET['cb_bu'] ?>" target="_blank">
+                                        <input type="button" class="btn btn-success" value="Export To Excel" />
+                                    </a>
+                                    <a href="report/printReportCarAll.php?year=<?= $_GET['year'] ?>&month=<?= $_GET['month'] ?>&cb_bu=<?= $_GET['cb_bu'] ?>" target="_blank">
+                                        <input type="button" class="btn btn-primary" style="background-color: #008CBA;" value="Print" />
+                                    </a>
+                                    <?php
+                                    if ($cb_bu != 0) {
+                                    ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table id="example5" class="table table-bordered beautified_report">
+                                                            <thead class="table-info">
+                                                                <tr>
+                                                                    <th class="text-center">ລ/ດ</th>
+                                                                    <th>ທະບຽນລົດ</th>
+                                                                    <!-- <th>ປະເພດ</th> -->
+                                                                    <th class="text-center">ປີ</th>
+                                                                    <th class="text-center">ເດືອນ</th>
+                                                                    <?php
+
+                                                                    if ($resultd = $mysqli->query($depart)) {
+                                                                        while ($rowd = $resultd->fetch_assoc()) {
+                                                                    ?>
+                                                                            <th class="text-center"><?= $rowd['name'] ?></th>
+
+                                                                    <?php
+                                                                        }
+                                                                        $resultd->close();
+                                                                    }
+                                                                    ?>
+                                                                    <!-- <th class="text-center">ມູນຄ່າລວມ</th>
+                                                                    <th class="text-center">ກມ ລວມ</th> -->
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php
+                                                                $total = 0;
+
+                                                                $totalAll = 0;
+                                                                $totalKm = 0;
+
+                                                                $totalBu1All = 0;
+
+                                                                $i = 1;
+                                                                if ($result = $mysqli->query($report)) {
+                                                                    while ($row = $result->fetch_assoc()) {
+
+
+                                                                        $totalBu1 = $row['kmUsage1'] / $row['totalKm'] * $row['amount'];
+
+
+
+                                                                        if ($row['kmUsage1'] != 0) {
+
+                                                                ?>
+
+
+
+                                                                            <tr>
+                                                                                <td align="center"><?= $i ?> </td>
+                                                                                <td><?= $row['car_reg'] ?></td>
+                                                                                <!-- <td><?= $row['type'] ?></td> -->
+                                                                                <td align="center"><?= $row['yearRecord'] ?></td>
+                                                                                <td align="center"><?= $row['monthRecord'] ?></td>
+                                                                                <td align="center"><?= number_format($totalBu1) ?></td>
+
+                                                                                <!-- <td align="center"><?= number_format($row['amount']) ?></td>
+                                                                            <td align="center"> <?= number_format($row['totalKm']) ?></td> -->
+
+                                                                            </tr>
+
+                                                                    <?php
+
+                                                                            $i++;
+
+                                                                            $totalBu1All =  $totalBu1All + $totalBu1;
+
+                                                                            $totalAll = $totalAll + $row['amount'];
+                                                                            $totalKm = $totalKm + $row['totalKm'];
+                                                                        }
+                                                                    }
+                                                                    ?>
+
+                                                                <?php
+                                                                    $result->close();
+                                                                }
+                                                                ?>
+
+
+
+
+
+
+                                                            </tbody>
+
+                                                            <?php
+                                                            $totalNumMunOnly = 0;
+                                                            if ($resultNumMunOnly = $mysqli->query($numMunOnly)) {
+                                                                while ($rownumMunOnly = $resultNumMunOnly->fetch_assoc()) {
+                                                                    if ($rownumMunOnly['sumMeter'] == null) {
+
+
+                                                            ?>
+                                                                        <tr>
+                                                                            <td align="center"><?= $i ?> </td>
+                                                                            <td><?= $rownumMunOnly['car_reg'] ?></td>
+                                                                            <td align="center"><?= $rownumMunOnly['budget_year'] ?></td>
+
+                                                                            <td align="center"><?= $rownumMunOnly['budget_month'] ?></td>
+
+
+                                                                            <td align="center"><?= number_format($rownumMunOnly['amount']) ?></td>
+
+                                                                        </tr>
+
+                                                            <?php
+                                                                        $i++;
+                                                                        $totalNumMunOnly = $totalNumMunOnly + $rownumMunOnly['amount'];
+                                                                    }
+                                                                }
+                                                            }
+                                                            ?>
+
+                                                            <tr class="table-success">
+                                                                <td align="right" colspan="4"><b>ລວມ:</b></td>
+                                                                <td align="center"><b><?= number_format($totalBu1All + $totalNumMunOnly) ?> ກີບ</b></td>
+
+                                                                <!-- <td align="center"><b><?= number_format($totalAll) ?> ກີບ</b></td>
+                                                                <td align="center"><b><?= number_format($totalKm) ?> ກມ</b></td> -->
+
+                                                            </tr>
+
+
+                                                            <tr class="table-info">
+                                                                <td align="right" colspan="4"><b>ຄ່າບຳລຸງຮັກສາບັດ:</b></td>
+                                                                <?php
+
+                                                                if ($resultf = $mysqli->query($feeCard)) {
+                                                                    while ($rowf = $resultf->fetch_assoc()) {
+
+                                                                ?>
+                                                                        <td align="center"><b><?= number_format($rowf['amount']) ?></b></td>
+
+                                                                <?php
+                                                                        $feeCardTotalAmount =  $feeCardTotalAmount + $rowf['amount'];
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <!-- <td align="center"><b><?= number_format($feeCardTotalAmount) ?></b></td>
+                                                                <td></td> -->
+
+                                                            </tr>
+
+                                                            <tr class="table-info">
+                                                                <td align="right" colspan="4"><b>ພາສີມູນຄ່າເພີ່ມຂອງບັດ:</b></td>
+                                                                <?php
+
+                                                                if ($resultf = $mysqli->query($feeCard)) {
+                                                                    while ($rowf = $resultf->fetch_assoc()) {
+
+                                                                ?>
+                                                                        <td align="center"><b><?= number_format($rowf['tax']) ?></b></td>
+
+                                                                <?php
+                                                                        $feeCardTotalTax =  $feeCardTotalTax + $rowf['tax'];
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <!-- <td align="center"><b><?= number_format($feeCardTotalTax) ?></b></td>
+                                                                <td></td> -->
+
+                                                            </tr>
+                                                            <tr class="table-info">
+                                                                <td align="right" colspan="4"><b>ຄ່າປັບໃໝ:</b></td>
+                                                                <?php
+
+                                                                if ($resultf = $mysqli->query($feeCard)) {
+                                                                    while ($rowf = $resultf->fetch_assoc()) {
+
+                                                                ?>
+                                                                        <td align="center"><b><?= number_format($rowf['adjust']) ?></b></td>
+
+                                                                <?php
+                                                                        $feeCardTotalAdjust =  $feeCardTotalAdjust + $rowf['adjust'];
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <!-- <td align="center"><b><?= number_format($feeCardTotalAdjust) ?></b></td>
+                                                                <td></td> -->
+
+                                                            </tr>
+                                                            <?php
+
+
+                                                            if ($resultf = $mysqli->query($feeCard)) {
+                                                                while ($rowf = $resultf->fetch_assoc()) {
+                                                                    if ($rowf['name'] == 'ຫ້ອງການໃຫຍ່') {
+                                                                        $value1 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ສວນນ້ຳ') {
+                                                                        $value2 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ໄອເຕັກມໍລ') {
+                                                                        $value3 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ວາງສະແດງ') {
+                                                                        $value4 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ທົ່ງຂັນຄຳ') {
+                                                                        $value5 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ໄອເຕັກສະຫວັນ') {
+                                                                        $value6 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ເລກໄອເຕັກ') {
+                                                                        $value7 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ເຢສພລີດ') {
+                                                                        $value8 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'TK Namsuang') {
+                                                                        $value9 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'TPD') {
+                                                                        $value10 = $rowf['total'];
+                                                                    }
+                                                                }
+                                                            }
+
+
+                                                            $allBu1 = $totalBu1All + $value1;
+
+                                                            $totalAllAll = $allBu1 + $totalNumMunOnly;
+                                                            ?>
+                                                            <tr class="table-danger">
+                                                                <td align="right" colspan="4"><b>ລວມທັງໝົດ:</b></td>
+                                                                <td align="center"><b><?= number_format($totalAllAll)  ?> ກີບ</b></td>
+
+                                                                <!-- <td align="center"><b><?= number_format($totalAllAll) ?> ກີບ</b></td>
+                                                                <td align="center"><b><?= number_format($totalKm) ?> ກມ</b></td> -->
+
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer">
+                                                    ປະຈຳປີ: <?= $year ?>
+                                                    ເດືອນ: <?= $month ?>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    } else {
+                                    ?>
+                                        <div class="row">
+                                            <div class="col-md-12">
+
+                                                <div class="card-body">
+                                                    <div class="table-responsive">
+                                                        <table id="example5" class="table table-bordered beautified_report">
+                                                            <thead class="table-info">
+                                                                <tr>
+                                                                    <th class="text-center">ລ/ດ</th>
+                                                                    <th>ທະບຽນລົດ</th>
+                                                                    <th>ປະເພດ</th>
+                                                                    <th class="text-center">ປີ</th>
+                                                                    <th class="text-center">ເດືອນ</th>
+                                                                    <?php
+
+                                                                    if ($resultd = $mysqli->query($depart)) {
+                                                                        while ($rowd = $resultd->fetch_assoc()) {
+                                                                    ?>
+                                                                            <th class="text-center"><?= $rowd['name'] ?></th>
+
+                                                                    <?php
+                                                                        }
+                                                                        $resultd->close();
+                                                                    }
+                                                                    ?>
+                                                                    <th class="text-center">ມູນຄ່າລວມ</th>
+                                                                    <th class="text-center">ກມ ລວມ</th>
+
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php
+                                                                $total = 0;
+
+                                                                $totalAll = 0;
+                                                                $totalKm = 0;
+                                                                $totalLit = 0;
+                                                                $totalKmPerLit = 0;
+
+                                                                $totalBu1All = 0;
+                                                                $totalBu2All = 0;
+                                                                $totalBu3All = 0;
+                                                                $totalBu4All = 0;
+                                                                $totalBu5All = 0;
+                                                                $totalBu6All = 0;
+                                                                $totalBu7All = 0;
+                                                                $totalBu8All = 0;
+                                                                $totalBu9All = 0;
+                                                                $i = 1;
+                                                                if ($result = $mysqli->query($report)) {
+                                                                    while ($row = $result->fetch_assoc()) {
+                                                                        $total = $row['kmUsage1'] + $row['kmUsage2'] +
+                                                                            $row['kmUsage3'] + $row['kmUsage4'] +
+                                                                            $row['kmUsage5'] + $row['kmUsage6'] +
+                                                                            $row['kmUsage7'] + $row['kmUsage8'] +
+                                                                            $row['kmUsage9'] +  $row['kmUsage10'];
+
+                                                                        $totalBu1 = $row['kmUsage1'] / $total * $row['amount'];
+                                                                        $totalBu2 = $row['kmUsage2'] / $total * $row['amount'];
+                                                                        $totalBu3 = $row['kmUsage3'] / $total * $row['amount'];
+                                                                        $totalBu4 = $row['kmUsage4'] / $total * $row['amount'];
+                                                                        $totalBu5 = $row['kmUsage5'] / $total * $row['amount'];
+                                                                        $totalBu6 = $row['kmUsage6'] / $total * $row['amount'];
+                                                                        $totalBu7 = $row['kmUsage7'] / $total * $row['amount'];
+                                                                        $totalBu8 = $row['kmUsage8'] / $total * $row['amount'];
+                                                                        $totalBu9 = $row['kmUsage9'] / $total * $row['amount'];
+                                                                        $totalBu10 = $row['kmUsage10'] / $total * $row['amount'];
+                                                                        $totalAllBu = $totalBu1 + $totalBu2 + $totalBu3 + $totalBu4 +
+                                                                            $totalBu5 + $totalBu6 + $totalBu7 + $totalBu8 + $totalBu9 + $totalBu10;
+
+                                                                        if ($totalAllBu != 0) {
+
+
+
+                                                                ?>
+
+
+
+                                                                            <tr>
+                                                                                <td align="center"><?= $i ?> </td>
+                                                                                <td><?= $row['car_reg'] ?></td>
+                                                                                <td><?= $row['type'] ?></td>
+                                                                                <td align="center"><?= $row['year'] ?></td>
+                                                                                <td align="center"><?= $row['month'] ?></td>
+                                                                                <td align="center"><?= number_format($totalBu1) ?></td>
+                                                                                <td align="center"><?= number_format($totalBu2) ?></td>
+                                                                                <td align="center"><?= number_format($totalBu3) ?></td>
+                                                                                <td align="center"><?= number_format($totalBu4) ?></td>
+                                                                                <td align="center"><?= number_format($totalBu5) ?></td>
+                                                                                <td align="center"><?= number_format($totalBu6) ?></td>
+                                                                                <td align="center"><?= number_format($totalBu7) ?></td>
+                                                                                <td align="center"><?= number_format($totalBu8) ?></td>
+                                                                                <td align="center"><?= number_format($totalBu9) ?></td>
+                                                                                <td align="center"><?= number_format($totalBu10) ?></td>
+
+                                                                                <td align="center"><?= number_format($totalAllBu) ?></td>
+                                                                                <td align="center"> <?= number_format($total) ?></td>
+
+                                                                            </tr>
+
+                                                                    <?php
+
+                                                                            $i++;
+
+                                                                            $totalBu1All =  $totalBu1All + $totalBu1;
+                                                                            $totalBu2All =  $totalBu2All + $totalBu2;
+                                                                            $totalBu3All =  $totalBu3All + $totalBu3;
+                                                                            $totalBu4All =  $totalBu4All + $totalBu4;
+                                                                            $totalBu5All =  $totalBu5All + $totalBu5;
+                                                                            $totalBu6All =  $totalBu6All + $totalBu6;
+                                                                            $totalBu7All =  $totalBu7All + $totalBu7;
+                                                                            $totalBu8All =  $totalBu8All + $totalBu8;
+                                                                            $totalBu9All =  $totalBu9All + $totalBu9;
+                                                                            $totalBu10All =  $totalBu10All + $totalBu10;
+                                                                            $totalAll = $totalAll + $row['amount'];
+                                                                            $totalKm = $totalKm + $total;
+                                                                            $totalLit = $totalLit + $row['gas'];
+                                                                            $totalKmPerLit = $totalKmPerLit + $total / $row['gas'];
+                                                                        }
+                                                                    }
+                                                                    ?>
+
+                                                                <?php
+                                                                    $result->close();
+                                                                }
+                                                                ?>
+
+
+
+
+
+
+                                                            </tbody>
+                                                            <?php
+                                                            $totalNumMunOnly = 0;
+                                                            if ($resultNumMunOnly = $mysqli->query($numMunOnly)) {
+                                                                while ($rownumMunOnly = $resultNumMunOnly->fetch_assoc()) {
+                                                                    if ($rownumMunOnly['sumMeter'] == null) {
+
+
+                                                            ?>
+                                                                        <tr>
+                                                                            <td align="center"><?= $i ?> </td>
+                                                                            <td ><?= $rownumMunOnly['car_reg'] ?></td>
+                                                                            <td ><?= $rownumMunOnly['type'] ?></td>
+                                                                            <td align="center"><?= $rownumMunOnly['budget_year'] ?></td>
+                                                                            <td align="center"><?= $rownumMunOnly['budget_month'] ?></td>
+                                                                          
+                                                                            <td align="center" colspan="10"></td>
+                                                                            <td align="center"><?= number_format($rownumMunOnly['amount']) ?></td>
+                                                                            <td align="center"></td>
+                                                                        </tr>
+
+                                                            <?php
+                                                                        $i++;
+                                                                        $totalNumMunOnly = $totalNumMunOnly + $rownumMunOnly['amount'];
+                                                                    }
+                                                                }
+                                                            }
+                                                            ?>
+
+
+                                                            <tr class="table-success">
+                                                                <td align="right" colspan="5"><b>ລວມ:</b></td>
+                                                                <td align="center"><b><?= number_format($totalBu1All) ?> </b></td>
+                                                                <td align="center"><b><?= number_format($totalBu2All) ?> </b></td>
+                                                                <td align="center"><b><?= number_format($totalBu3All) ?> </b></td>
+                                                                <td align="center"><b><?= number_format($totalBu4All) ?> </b></td>
+                                                                <td align="center"><b><?= number_format($totalBu5All) ?></b></td>
+                                                                <td align="center"><b><?= number_format($totalBu6All) ?></b></td>
+                                                                <td align="center"><b><?= number_format($totalBu7All) ?></b></td>
+                                                                <td align="center"><b><?= number_format($totalBu8All) ?></b></td>
+                                                                <td align="center"><b><?= number_format($totalBu9All) ?></b></td>
+                                                                <td align="center"><b><?= number_format($totalBu10All) ?></b></td>
+                                                                <td align="center"><b><?= number_format($totalAll + $totalNumMunOnly) ?> ກີບ</b></td>
+                                                                <td align="center"><b><?= number_format($totalKm) ?> ກມ</b></td>
+
+                                                            </tr>
+
+
+                                                            <tr class="table-info">
+                                                                <td align="right" colspan="5"><b>ຄ່າບຳລຸງຮັກສາບັດ:</b></td>
+                                                                <?php
+
+                                                                if ($resultf = $mysqli->query($feeCard)) {
+                                                                    while ($rowf = $resultf->fetch_assoc()) {
+
+                                                                ?>
+                                                                        <td align="center"><b><?= number_format($rowf['amount']) ?></b></td>
+
+                                                                <?php
+                                                                        $feeCardTotalAmount =  $feeCardTotalAmount + $rowf['amount'];
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <td align="center"><b><?= number_format($feeCardTotalAmount) ?></b></td>
+                                                                <td></td>
+
+                                                            </tr>
+
+                                                            <tr class="table-info">
+                                                                <td align="right" colspan="5"><b>ພາສີມູນຄ່າເພີ່ມຂອງບັດ:</b></td>
+                                                                <?php
+
+                                                                if ($resultf = $mysqli->query($feeCard)) {
+                                                                    while ($rowf = $resultf->fetch_assoc()) {
+
+                                                                ?>
+                                                                        <td align="center"><b><?= number_format($rowf['tax']) ?></b></td>
+
+                                                                <?php
+                                                                        $feeCardTotalTax =  $feeCardTotalTax + $rowf['tax'];
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <td align="center"><b><?= number_format($feeCardTotalTax) ?></b></td>
+                                                                <td></td>
+
+                                                            </tr>
+                                                            <tr class="table-info">
+                                                                <td align="right" colspan="5"><b>ຄ່າປັບໃໝ:</b></td>
+                                                                <?php
+
+                                                                if ($resultf = $mysqli->query($feeCard)) {
+                                                                    while ($rowf = $resultf->fetch_assoc()) {
+
+                                                                ?>
+                                                                        <td align="center"><b><?= number_format($rowf['adjust']) ?></b></td>
+
+                                                                <?php
+                                                                        $feeCardTotalAdjust =  $feeCardTotalAdjust + $rowf['adjust'];
+                                                                    }
+                                                                }
+                                                                ?>
+                                                                <td align="center"><b><?= number_format($feeCardTotalAdjust) ?></b></td>
+                                                                <td></td>
+
+                                                            </tr>
+                                                            <?php
+
+
+                                                            if ($resultf = $mysqli->query($feeCard)) {
+                                                                while ($rowf = $resultf->fetch_assoc()) {
+                                                                    if ($rowf['name'] == 'ຫ້ອງການໃຫຍ່') {
+                                                                        $value1 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ສວນນ້ຳ') {
+                                                                        $value2 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ໄອເຕັກມໍລ') {
+                                                                        $value3 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ວາງສະແດງ') {
+                                                                        $value4 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ທົ່ງຂັນຄຳ') {
+                                                                        $value5 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ໄອເຕັກສະຫວັນ') {
+                                                                        $value6 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ເລກໄອເຕັກ') {
+                                                                        $value7 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'ເຢສພລີດ') {
+                                                                        $value8 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'TK Namsuang') {
+                                                                        $value9 = $rowf['total'];
+                                                                    }
+                                                                    if ($rowf['name'] == 'TPD') {
+                                                                        $value10 = $rowf['total'];
+                                                                    }
+                                                                }
+                                                            }
+
+
+                                                            $allBu1 = $totalBu1All + $value1;
+                                                            $allBu2 = $totalBu2All + $value2;
+                                                            $allBu3 = $totalBu3All + $value3;
+                                                            $allBu4 = $totalBu4All + $value4;
+                                                            $allBu5 = $totalBu5All + $value5;
+                                                            $allBu6 = $totalBu6All + $value6;
+                                                            $allBu7 = $totalBu7All + $value7;
+                                                            $allBu8 = $totalBu8All + $value8;
+                                                            $allBu9 = $totalBu9All + $value9;
+                                                            $allBu10 = $totalBu10All + $value10;
+                                                            $totalAllAll = $allBu1 + $allBu2  + $allBu3 + $allBu4 + $allBu5 + $allBu6 + $allBu7 + $allBu8 + $allBu9 + $allBu10 + $totalNumMunOnly;
+                                                            ?>
+                                                            <tr class="table-danger">
+                                                                <td align="right" colspan="5"><b>ລວມທັງໝົດ:</b></td>
+                                                                <td align="center"><b><?= number_format($allBu1)  ?> </b></td>
+                                                                <td align="center"><b><?= number_format($allBu2) ?> </b></td>
+                                                                <td align="center"><b><?= number_format($allBu3) ?> </b></td>
+                                                                <td align="center"><b><?= number_format($allBu4) ?> </b></td>
+                                                                <td align="center"><b><?= number_format($allBu5) ?></b></td>
+                                                                <td align="center"><b><?= number_format($allBu6) ?></b></td>
+                                                                <td align="center"><b><?= number_format($allBu7) ?></b></td>
+                                                                <td align="center"><b><?= number_format($allBu8) ?></b></td>
+                                                                <td align="center"><b><?= number_format($allBu9) ?></b></td>
+                                                                <td align="center"><b><?= number_format($allBu10) ?></b></td>
+                                                                <td align="center"><b><?= number_format($totalAllAll) ?> ກີບ</b></td>
+                                                                <td align="center"><b><?= number_format($totalKm) ?> ກມ</b></td>
+
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="card-footer">
+                                                    ປະຈຳປີ: <?= $year ?>
+                                                    ເດືອນ: <?= $month ?>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php
+                                    }
+                                    ?>
+
+
+                                <?php
+                                }
+                                ?>
+                            </div>
+
+
+                    </div>
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+
+    </section>
+    <!-- /.content -->
+</div>

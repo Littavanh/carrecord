@@ -1,0 +1,45 @@
+<?php
+session_start();
+// echo"sjddjda";
+
+$userId = $_SESSION['user_id'];
+$mysqli = new mysqli("localhost", "root", "56588965", "db_car_record");
+$dateNow = date("Y-m-d H:i:s");
+
+$tranNo = $_GET['tranNo'];
+$date = $_GET['date'];
+$list = $_GET['list'];
+$qty = $_GET['qty'];
+$unit = $_GET['unit'];
+$price = $_GET['price'];
+$total = $_GET['total'];
+$store = $_GET['store'];
+$address = $_GET['address'];
+$phone = $_GET['phone'];
+$driver = $_GET['driver'];
+$guarantee = $_GET['guarantee'];
+$remark = $_GET['remark'];
+
+
+/* check connection */
+if ($mysqli->connect_errno) {
+    printf("Connect failed: %s\n", $mysqli->connect_error);
+    exit();
+}
+
+/*----------- function Execute query --------------*/
+
+// mysql_query("SET NAMES 'utf8'");
+$mysqli->set_charset("utf8");
+
+$sql = "INSERT INTO `tb_repair_detail` ( `rp_id`,`date`, `list_repair`, `qty`, `unit`, `price`, `total`, `store`, `address`, 
+`tel`, `driver`, `guarantee`, `remark`, `user_add`, `date_add`)
+ VALUES ('$tranNo', '$date', '$list', '$qty', '$unit',
+  '$price', '$total', '$store', '$address', '$phone', '$driver', '$guarantee', '$remark','$userId','$dateNow') ";
+if ($mysqli->query($sql) === TRUE) {
+    // header("Location: ?d=master/product");
+    //   echo '<script>console.log("succesfully")</script>';
+
+} else {
+    echo '<script>alert("error")</script>';
+}

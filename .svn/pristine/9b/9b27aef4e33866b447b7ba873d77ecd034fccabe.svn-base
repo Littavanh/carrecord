@@ -1,0 +1,16 @@
+<?php
+
+$year = $mysqli->real_escape_string($_GET['year']);
+$month = $mysqli->real_escape_string($_GET['month']);
+$car_reg = $mysqli->real_escape_string($_GET['car_reg']);
+
+
+
+    $report = "SELECT *,SUM(a.meter_end - a.meter_start) as km_use, b.amount as amonth FROM
+     v_diary_record_car as a INNER JOIN v_budget as b ON a.car_reg = b.car_reg 
+    WHERE a.car_reg ='$car_reg' AND a.yearRecord = '$year' AND a.monthRecord = '$month'
+   GROUP BY a.car_reg,a.yearRecord,a.monthRecord,a.nameDep";
+
+$byMonth = "SELECT SUM(a.meter_end - a.meter_start) as total FROM v_diary_record_car as a
+WHERE a.car_reg ='$car_reg' AND a.yearRecord = '$year' AND a.monthRecord = '$month'
+GROUP BY a.car_reg,a.yearRecord,a.monthRecord";

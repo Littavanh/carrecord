@@ -1,0 +1,16 @@
+(select `db_car_record`.`tb_diary_record_car`.`id` AS `id`,`db_car_record`.`tb_car`.`car_reg` AS `car_reg`,
+`db_car_record`.`tb_driver`.`name` AS `name`,`db_car_record`.`tb_driver`.`surname` AS `surname`
+,`db_car_record`.`tb_diary_record_car`.`date` AS `date`,`db_car_record`.`tb_diary_record_car`.`time_start` AS `time_start`
+,`db_car_record`.`tb_diary_record_car`.`time_end` AS `time_end`,`db_car_record`.`tb_diary_record_car`.`meter_start` AS `meter_start`
+,`db_car_record`.`tb_diary_record_car`.`meter_end` AS `meter_end`,`db_car_record`.`tb_diary_record_car`.`remark` AS `remark`
+,`db_car_record`.`tb_diary_record_car`.`user_add` AS `user_add`,`db_car_record`.`tb_diary_record_car`.`date_add` AS `date_add`
+,`db_car_record`.`tb_diary_record_car`.`isDelete` AS `isDelete`,extract(year from `db_car_record`.`tb_diary_record_car`.`date`) 
+AS `yearRecord`,extract(month from `db_car_record`.`tb_diary_record_car`.`date`) AS `monthRecord`
+,`db_car_record`.`tb_diary_record_car`.`driver_id` AS `driver_id`,`db_car_record`.`tb_diary_record_car`.`unit_id` 
+AS `unit_id`,`db_car_record`.`tb_diary_record_car`.`car_reg_id` AS `car_reg_id`,`db_car_record`.`tb_car`.`bu_id` 
+AS `b_id`,`db_car_record`.`tb_business`.`name` AS `bu_name` ,`db_car_record`.`v_unit`.`b_id` AS `ub_id` ,`db_car_record`.`v_unit`.`name` AS `ub_name` 
+from (((`db_car_record`.`tb_diary_record_car` join `db_car_record`.`tb_car` 
+on((`db_car_record`.`tb_diary_record_car`.`car_reg_id` = `db_car_record`.`tb_car`.`id`))) 
+join `db_car_record`.`tb_driver` on((`db_car_record`.`tb_diary_record_car`.`driver_id` = `db_car_record`.`tb_driver`.`id`))) 
+join `db_car_record`.`tb_business` on((`db_car_record`.`tb_car`.`bu_id` = `db_car_record`.`tb_business`.`id`)))
+join `db_car_record`.`v_unit` on((`db_car_record`.`tb_diary_record_car`.`unit_id` = `db_car_record`.`v_unit`.`id`)))

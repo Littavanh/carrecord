@@ -1,0 +1,56 @@
+<?php
+
+$user_add = $_SESSION['user_id'];
+$date_add =  date('Y-m-d', strtotime('+7 hours'));
+
+// echo '<script>alert("'.$_POST['type'].'")</script>';
+if (isset($_POST['type']) && isset($_POST["btnSaveNew"])) {
+	for ($i = 0; $i < count($_POST['type']); $i++) {
+		$id = $mysqli->real_escape_string($_POST['id'][$i]);
+		$txtDate = $mysqli->real_escape_string($_POST['txtDate'][$i]);
+		$txtCar_reg = $mysqli->real_escape_string($_POST['txtCar_reg'][$i]);
+		$txtDriver = $mysqli->real_escape_string($_POST['txtDriver'][$i]);
+		$txtUnit = $mysqli->real_escape_string($_POST['txtUnit'][$i]);
+		$txtTime_start = $mysqli->real_escape_string($_POST['txtTime_start'][$i]);
+		$txtTime_end = $mysqli->real_escape_string($_POST['txtTime_end'][$i]);
+		$txtMeter_start = $mysqli->real_escape_string($_POST['txtMeter_start'][$i]);
+		$txtMeter_end = $mysqli->real_escape_string($_POST['txtMeter_end'][$i]);
+		$txtRemark = $mysqli->real_escape_string($_POST['txtRemark'][$i]);
+
+		switch ($_POST['type'][$i]) {
+			case "added":
+				$sql = "insert into tb_diary_record_car (car_reg_id,unit_id,driver_id,date,time_start,time_end,meter_start,meter_end,remark,user_add)
+				VALUES ('$txtCar_reg','$txtUnit','$txtDriver','$txtDate','$txtTime_start','$txtTime_end','$txtMeter_start','$txtMeter_end','$txtRemark','$user_add') ";
+				if ($mysqli->query($sql) === TRUE) {
+					// echo "<center><h2>Insert Successfully</h2></center>";
+				} else {
+					// echo "<center><h2>$sql</h2></center>";
+				}
+				break;
+			case "edited":
+				$sql = "UPDATE tb_diary_record_car SET
+				 car_reg_id = '$txtCar_reg', unit_id = '$txtUnit', driver_id = '$txtDriver', date = '$txtDate', time_start = '$txtTime_start',
+		 		 time_end = '$txtTime_end', meter_start = '$txtMeter_start', meter_end = '$txtMeter_end', remark = '$txtRemark' 
+		  		WHERE tb_diary_record_car.id ='$id'";
+				if ($mysqli->query($sql) === TRUE) {
+					echo "<center><h2>Update Successfully</h2></center>";
+				} else {
+					// echo "<center><h2>$sql</h2></center>";
+				}
+				break;
+		}
+	}
+}
+if (isset($_GET["del"])) {
+
+
+	$id = $_GET["del"];
+
+	$sql = "UPDATE tb_diary_record_car SET isDelete='yes'  WHERE id ='$id'";
+
+	if ($mysqli->query($sql) === TRUE) {
+		header("Location: ?d=record/recordcar");
+	} else {
+		echo "<center><h2>ERROR Delete</h2></center>";
+	}
+}

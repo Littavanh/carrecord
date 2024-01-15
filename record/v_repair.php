@@ -1,0 +1,556 @@
+<?php
+htmltage("Car Record System");
+?>
+
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>ບັນທຶກການສ້ອມແປງ ແລະ ບຳລຸງຮັກສາ ພາຫະນະ</h1>
+                </div>
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-right">
+                        <li class="breadcrumb-item"><a href="#">ໜ້າຫຼັກ</a></li>
+                        <li class="breadcrumb-item active">ບັນທຶກຂໍ້ມູນ</li>
+                        <li class="breadcrumb-item active">ບັນທຶກການສ້ອມແປງ ແລະ ບຳລຸງຮັກສາ ພາຫະນະ</li>
+                    </ol>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-body" style="background-color: #bee5eb;">
+                        <div class="row">
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ທະບຽນລົດ</label>
+                                    <select class="form-control" id="cb_car_reg" onchange="myFunction()">
+                                        <option value="0">---ເລືອກ---</option>
+                                        <?php
+                                        $car_reg = "SELECT * FROM v_car $wherebu";
+                                        if ($resultc = $mysqli->query($car_reg)) {
+                                            while ($rowc = $resultc->fetch_assoc()) {
+
+                                        ?>
+                                                <option value="<?= $rowc['id'] ?>,<?= $rowc['color'] ?>,<?= $rowc['machine_no'] ?>,<?= $rowc['machine_no1'] ?>,<?= $rowc['name'] ?>"><?= $rowc['car_reg'] ?> | <?= $rowc['type'] ?></option>
+                                        <?php }
+                                        } ?>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <label>ສີລົດ</label>
+
+                                    <input type="text" readonly id="txtColor" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ເລກຈັກ</label>
+
+                                    <input type="text" readonly id="txtMachineNo" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ເລກຖັງ</label>
+
+                                    <input type="text" readonly id="txtMachineNo1" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ອອກຊື່ບໍລິສັດ</label>
+
+                                    <input type="text" readonly id="txtCompany" class="form-control">
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <?php
+
+
+
+
+                    // echo '<script >alert(" ' . $a_id . '");</script>';
+                    ?>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <label>ເລກທີໃບສະເໜີ</label>
+
+                                    <input type="text" id="txtTranNo" class="form-control" value="">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ວັນທີເດືອນປີສະເໜີ</label>
+
+                                    <input type="date" id="txtDate" class="form-control" value="<?php echo date('Y-m-d'); ?>">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ລາຍການສ້ອມແປງ</label>
+
+                                    <input type="text" id="txtList" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <label>ຈຳນວນ</label>
+                                    <input type="number" id="txtQty" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <label>ຫົວໜ່ວຍ</label>
+                                    <input type="text" id="txtUnit" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <label>ລາຄາຕໍ່ຫົວໜ່ວຍ</label>
+
+                                    <input type="text" id="txtPrice" class="form-control" onkeyup="cal(this.value)">
+                                </div>
+                            </div>
+                            <div class="col-sm-1">
+                                <div class="form-group">
+                                    <label>ຈຳນວນເງິນລວມ</label>
+
+                                    <input type="text" id="txtTotal" class="form-control" readonly>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ຊື່ຮ້ານ</label>
+
+                                    <input type="text" id="txtStore" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ທີ່ຢູ່</label>
+
+                                    <input type="text" id="txtAddress" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ເບີໂທ</label>
+
+                                    <input type="text" id="txtTel" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ພະນັກງານຂັບລົດ</label>
+                                    <select class="form-control" id="cb_driver">
+                                        <option value="0">---ເລືອກ---</option>
+                                        <?php
+                                        $driver = "SELECT * FROM tb_driver";
+                                        if ($resultc = $mysqli->query($driver)) {
+                                            while ($rowc = $resultc->fetch_assoc()) {
+
+                                        ?>
+                                                <option value="<?= $rowc['id'] ?>"> <?= $rowc['name'] ?> <?= $rowc['surname'] ?></option>
+                                        <?php }
+                                        } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ການຮັບປະກັນ</label>
+
+                                    <input type="date" id="txtPagun" class="form-control">
+                                </div>
+                            </div>
+                            <div class="col-sm-2">
+                                <div class="form-group">
+                                    <label>ໝາຍເຫດ</label>
+
+                                    <input type="text" id="txtRemark" class="form-control">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-primary" onclick="addRow()">ເພີ່ມ</button>
+                        <button class="btn btn-danger" onclick="deleteRow()">ລົບ</button>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </section>
+    <!-- Main content -->
+    <section class="content">
+
+        <div class="row">
+            <!-- left column -->
+            <div class="col-md-12">
+                <div class="card">
+
+                    <!-- /.modal -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="exampleEditable" class="table table-bordered beautified_report">
+
+                                        <thead class="table-info">
+                                            <tr>
+
+                                                <th class="text-center">ເລກທີໃບສະເໜີ</th>
+                                                <th class="text-center">ວັນທີເດືອນປີສະເໜີ</th>
+                                                <th class="text-center">ລາຍການສ້ອມແປງ</th>
+                                                <th class="text-center">ຈຳນວນ</th>
+                                                <th class="text-center">ຫົວໜ່ວຍ</th>
+                                                <th class="text-center">ລາຄາຕໍ່ຫົວໜ່ວຍ</th>
+                                                <th class="text-center">ຈຳນວນເງິນລວມ</th>
+                                                <th class="text-center">ຊື່ຮ້ານ</th>
+                                                <th class="text-center">ທີ່ຢູ່</th>
+                                                <th class="text-center">ເບີໂທ</th>
+                                                <th class="text-center">ໂຊເຟີ້ລົດ</th>
+                                                <th class="text-center">ການຮັບປະກັນ</th>
+                                                <th class="text-center">ໝາຍເຫດ</th>
+
+
+
+
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbody1">
+
+
+                                        </tbody>
+                                        <tr>
+                                            <td align="right" colspan="6"><b>ລາຄາລວມ:</b></td>
+                                            <td><b><input type="text" id="totalAll" style="border:none;"></b></td>
+                                            <td colspan="6"></td>
+
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="card-footer">
+                    <button class="btn btn-success" onclick="insert()">ບັນທຶກ</button>
+                </div>
+            </div>
+        </div>
+</div>
+<!-- /.row -->
+
+</section>
+</div>
+<!-- /.content -->
+<script>
+    function myFunction() {
+        var x = document.getElementById("cb_car_reg").value;
+        var exploded = x.split(",");
+        var color = exploded[1];
+        var machineNo = exploded[2];
+        var machineNo1 = exploded[3];
+        var company = exploded[4];
+
+        document.getElementById("txtColor").value = color;
+        document.getElementById("txtMachineNo").value = machineNo;
+        document.getElementById("txtMachineNo1").value = machineNo1;
+        document.getElementById("txtCompany").value = company;
+
+    }
+
+    function addRow() {
+
+        var txtTranNo = document.getElementById("txtTranNo").value;
+        var txtDate = document.getElementById("txtDate").value;
+        var txtList = document.getElementById("txtList").value;
+        var txtQty = document.getElementById("txtQty").value;
+        var txtUnit = document.getElementById("txtUnit").value;
+        var txtPrice = document.getElementById("txtPrice").value;
+        var txtTotal = document.getElementById("txtTotal").value;
+        var txtStore = document.getElementById("txtStore").value;
+        var txtAddress = document.getElementById("txtAddress").value;
+        var txtTel = document.getElementById("txtTel").value;
+        var cbdriver = document.getElementById("cb_driver");
+        var driver = cbdriver.options[cbdriver.selectedIndex].text;
+        var txtPagun = document.getElementById("txtPagun").value;
+        var txtRemark = document.getElementById("txtRemark").value;
+        if (txtTranNo == '' || driver == '---ເລືອກ---' || txtList == '' || txtQty == '' || txtUnit == '' || txtPrice == '' ||
+            txtTotal == '' || txtStore == '' || txtAddress == '' || txtTel == '' || txtPagun == '') {
+            alert('ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບ');
+        } else {
+
+            var i = 1;
+            var row = exampleEditable.insertRow(i);
+            var cell0 = row.insertCell(0);
+            var cell1 = row.insertCell(1);
+            var cell2 = row.insertCell(2);
+            var cell3 = row.insertCell(3);
+            var cell4 = row.insertCell(4);
+            var cell5 = row.insertCell(5);
+            var cell6 = row.insertCell(6);
+            var cell7 = row.insertCell(7);
+            var cell8 = row.insertCell(8);
+            var cell9 = row.insertCell(9);
+            var cell10 = row.insertCell(10);
+            var cell11 = row.insertCell(11);
+            var cell12 = row.insertCell(12);
+
+
+
+
+            cell0.innerHTML = txtTranNo;
+            cell1.innerHTML = txtDate;
+            cell2.innerHTML = txtList;
+            cell3.innerHTML = txtQty;
+            cell4.innerHTML = txtUnit;
+            cell5.innerHTML = txtPrice;
+            cell6.innerHTML = txtTotal;
+            cell7.innerHTML = txtStore;
+            cell8.innerHTML = txtAddress;
+            cell9.innerHTML = txtTel;
+            cell10.innerHTML = driver;
+            cell11.innerHTML = txtPagun;
+            cell12.innerHTML = txtRemark;
+
+
+            var oTable = document.getElementById('tbody1');
+
+            document.getElementById('totalAll').value = 0
+            //gets rows of table
+            var rowLength = oTable.rows.length - 1;
+            t = 0;
+
+            for (i = 0; i < rowLength; i++) {
+
+                //gets cells of current row
+                // var total1 = document.getElementById("txtTotal1").value;
+                var total = oTable.rows.item(i).cells.item(6).innerHTML;
+
+                t += parseFloat(total);
+
+                document.getElementById("totalAll").value = t;
+
+
+                console.log(document.getElementById("totalAll").value);
+
+
+
+            }
+
+
+
+            // document.getElementById("txtTranNo").value = "";
+            // document.getElementById("txtDate").value = "<?php echo date('Y-m-d'); ?>";
+            // document.getElementById("txtList").value = "";
+            // document.getElementById("txtQty").value = "";
+            // document.getElementById("txtUnit").value = "";
+            // document.getElementById("txtPrice").value = "";
+            // document.getElementById("txtTotal").value = "";
+            // document.getElementById("txtStore").value = "";
+            // document.getElementById("txtAddress").value = "";
+            // document.getElementById("txtTel").value = "";
+            // document.getElementById("cb_driver");
+
+            // document.getElementById("txtPagun").value = "";
+            // document.getElementById("txtRemark").value = "";
+
+        }
+
+
+    }
+
+    function deleteRow() {
+        var rowCount = document.getElementById('exampleEditable').rows.length;
+
+        if (rowCount == 2) {
+            console.log(rowCount);
+        } else {
+            document.getElementById("exampleEditable").deleteRow(1);
+        }
+
+    }
+
+    function insert() {
+        var id = document.getElementById("txtTranNo").value;
+        var cb_car_reg = document.getElementById("cb_car_reg").value;
+        var txtColor = document.getElementById("txtColor").value;
+        var txtMachineNo = document.getElementById("txtMachineNo").value;
+        var txtMachineNo1 = document.getElementById("txtMachineNo1").value;
+        var txtCompany = document.getElementById("txtCompany").value;
+        var total = document.getElementById("totalAll").value;
+        // if (cb_car_reg == 0 || txtColor == '' || txtMachineNo == '' || txtMachineNo1 == '' || txtCompany == '') {
+        if (cb_car_reg == 0) {
+            alert('ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບ');
+        } else {
+
+
+            var oTable = document.getElementById('tbody1');
+
+            //gets rows of table
+            var rowLength = oTable.rows.length - 1;
+            // alert(rowLength);
+            insertRepair(id, cb_car_reg, txtColor, txtMachineNo, txtMachineNo1, txtCompany, total);
+
+            //loops through rows    
+            for (i = 0; i < rowLength; i++) {
+
+                //gets cells of current row
+                var tranNo = oTable.rows.item(i).cells.item(0).innerHTML;
+                var date = oTable.rows.item(i).cells.item(1).innerHTML;
+                var list = oTable.rows.item(i).cells.item(2).innerHTML;
+                var qty = oTable.rows.item(i).cells.item(3).innerHTML;
+                var unit = oTable.rows.item(i).cells.item(4).innerHTML;
+                var price = oTable.rows.item(i).cells.item(5).innerHTML;
+                var total = oTable.rows.item(i).cells.item(6).innerHTML;
+                var store = oTable.rows.item(i).cells.item(7).innerHTML;
+                var address = oTable.rows.item(i).cells.item(8).innerHTML;
+                var phone = oTable.rows.item(i).cells.item(9).innerHTML;
+                var driver = oTable.rows.item(i).cells.item(10).innerHTML;
+                var guarantee = oTable.rows.item(i).cells.item(11).innerHTML;
+                var remark = oTable.rows.item(i).cells.item(12).innerHTML;
+                // var col13 = oTable.rows.item(i).cells.item(13).innerHTML;
+                console.log(tranNo);
+                console.log(total);
+                //gets amount of cells of current row
+                // var cellLength = oCells.length;
+                // alert(oCells)
+                // alert(cellLength)
+                //loops through each cell in current row
+                // for (var j = 0; j < cellLength; j++) {
+                //     /* get your cell info here */
+                //     var cellVal = oCells.item(j).innerHTML;
+
+                // }
+
+                insertRepairDetail(tranNo, date, list, qty, unit, price, total, store, address, phone, driver, guarantee, remark);
+
+
+                document.getElementById("txtTranNo").value = "";
+                document.getElementById("txtDate").value = "<?php echo date('Y-m-d'); ?>";
+                document.getElementById("txtList").value = "";
+                document.getElementById("txtQty").value = "";
+                document.getElementById("txtUnit").value = "";
+                document.getElementById("txtPrice").value = "";
+                document.getElementById("txtTotal").value = "";
+                document.getElementById("txtStore").value = "";
+                document.getElementById("txtAddress").value = "";
+                document.getElementById("txtTel").value = "";
+                document.getElementById("cb_driver");
+
+                document.getElementById("txtPagun").value = "";
+                document.getElementById("txtRemark").value = "";
+            }
+            oTable.innerHTML = "";
+
+
+            alert("Insert Successfully!!");
+
+
+        }
+
+
+    }
+
+    function cal(price) {
+
+        qty = document.getElementById("txtQty").value;
+
+        price = price;
+
+        document.getElementById("txtTotal").value = price * qty;
+
+
+    }
+
+    function insertRepair(id, cb_car_reg, txtColor, txtMachineNo, txtMachineNo1, txtCompany, total) {
+        var strURL = "function/insertRepair.php?id=" + id + "&cb_car_reg=" + cb_car_reg + "&txtColor=" + txtColor +
+            "&txtMachineNo=" + txtMachineNo + "&txtMachineNo1=" + txtMachineNo1 + "&txtCompany=" +
+            txtCompany + "&total=" + total;
+        // alert(strURL);
+
+        $.ajax({
+            type: "POST",
+            url: strURL,
+            data: {
+                id: id,
+                cb_car_reg: cb_car_reg,
+                txtColor: txtColor,
+                txtMachineNo: txtMachineNo,
+                txtMachineNo1: txtMachineNo1,
+                txtCompany: txtCompany,
+                total: total
+            },
+            cache: false,
+            success: function(data) {
+                console.log("insert repair");
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr);
+            }
+        });
+    }
+
+    function insertRepairDetail(tranNo, date, list, qty, unit, price, total, store, address, phone, driver, guarantee, remark) {
+
+        var strURL = "function/insertRepair_detail.php?tranNo=" + tranNo + "&date=" + date +
+            "&list=" + list + "&qty=" + qty + "&unit=" +
+            unit + "&price=" + price + "&total=" + total + "&store=" + store + "&address=" +
+            address + "&phone=" + phone + "&driver=" + driver + "&guarantee=" + guarantee +
+            "&remark=" + remark;
+        // alert(strURL);
+
+        $.ajax({
+            type: "POST",
+            url: strURL,
+            data: {
+
+                tranNo: tranNo,
+                date: date,
+                list: list,
+                qty: qty,
+                unit: unit,
+                price: price,
+                total: total,
+                store: store,
+                address: address,
+                phone: phone,
+                driver: driver,
+                guarantee: guarantee,
+                remark: remark,
+            },
+            cache: false,
+            success: function(data) {
+                console.log("insert repair details");
+            },
+            error: function(xhr, status, error) {
+                console.error(xhr);
+            }
+        });
+    }
+</script>

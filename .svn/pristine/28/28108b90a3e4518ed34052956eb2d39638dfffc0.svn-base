@@ -1,0 +1,60 @@
+<?php
+
+if (isset($_POST["btnSaveNew"])) {
+	$txtCarReg = $mysqli->real_escape_string($_POST['txtCarReg']);
+	$cb_typecar = $mysqli->real_escape_string($_POST['cb_typecar']);
+	$cb_brandcar = $mysqli->real_escape_string($_POST['cb_brandcar']);
+	$txtModel = $mysqli->real_escape_string($_POST['txtModel']);
+	$cb_status = $mysqli->real_escape_string($_POST['cb_status']);
+	$sql = "insert into tb_car (car_reg,type_id,brand_id,model,status_id)
+			VALUES ('$txtCarReg','$cb_typecar','$cb_brandcar','$txtModel','$cb_status') ";
+
+	if ($mysqli->query($sql) === TRUE) {
+		header("Location: ?d=master/car");
+	} else {
+		echo "<center><h2>ERROR INSERT</h2></center>";
+	}
+}
+
+if (isset($_POST["btSaveEdit"])) {
+	$id = $mysqli->real_escape_string($_POST['txtId']);
+	$txtCarReg = $mysqli->real_escape_string($_POST['txtCarReg']);
+	$cb_typecar = $mysqli->real_escape_string($_POST['cb_typecar']);
+	$txtBrand = $mysqli->real_escape_string($_POST['txtBrand']);
+	$txtModel = $mysqli->real_escape_string($_POST['txtModel']);
+	$cb_status = $mysqli->real_escape_string($_POST['cb_status']);
+
+// if($txtBrand == ''){
+// 	$txtBrand = 0;
+// }
+
+	$sql = "UPDATE tb_car SET car_reg='$txtCarReg',type_id='$cb_typecar',brand_id='$txtBrand',model='$txtModel',status_id='$cb_status' WHERE id = '$id' ";
+
+
+	if ($mysqli->query($sql) === TRUE) {
+		header("Location: ?d=master/car");
+	} else {
+		echo "<center><h2>$sql</h2></center>";
+	}
+}
+
+
+
+
+if (isset($_GET["del"])) {
+
+
+	$id = $_GET["del"];
+
+	$sql = "DELETE FROM tb_car WHERE id ='$id'";
+
+	if ($mysqli->query($sql) === TRUE) {
+		header("Location: ?d=master/car");
+	} else {
+		echo "<center><h2>ERROR Delete</h2></center>";
+	}
+
+
+}
+
+?>

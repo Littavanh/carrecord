@@ -1,0 +1,48 @@
+<?php
+$year = $mysqli->real_escape_string($_GET['year']);
+$month = $mysqli->real_escape_string($_GET['month']);
+
+
+$depart = "SELECT * FROM tb_business";
+
+
+$report = "SELECT a.car_reg,IFNULL(d1.kmUsage, 0) as kmUsage1,IFNULL(d2.kmUsage, 0) as kmUsage2,
+IFNULL(d3.kmUsage, 0) as kmUsage3,IFNULL(d4.kmUsage, 0) as kmUsage4,
+IFNULL(d5.kmUsage, 0) as kmUsage5,IFNULL(d6.kmUsage, 0) as kmUsage6,
+IFNULL(d7.kmUsage, 0) as kmUsage7,IFNULL(d8.kmUsage, 0) as kmUsage8,
+IFNULL(d9.kmUsage, 0) as kmUsage9 ,a.month,a.year,a.type,b.amount,g.amount as gas
+FROM v_car_view as a
+LEFT JOIN v_drc_dept1 as d1 
+ON a.car_reg = d1.car_reg AND a.month = d1.monthRecord AND a.year = d1.yearRecord
+LEFT JOIN v_drc_dept2 as d2
+ON a.car_reg = d2.car_reg  AND a.month = d2.monthRecord AND a.year = d2.yearRecord
+LEFT JOIN v_drc_dept3 as d3 
+on a.car_reg = d3.car_reg  AND a.month = d3.monthRecord AND a.year = d3.yearRecord
+LEFT JOIN v_drc_dept4 as d4
+ON a.car_reg = d4.car_reg  AND a.month = d4.monthRecord AND a.year = d4.yearRecord
+LEFT JOIN v_drc_dept5 as d5
+ON a.car_reg = d5.car_reg AND a.month = d5.monthRecord AND a.year = d5.yearRecord
+LEFT JOIN v_drc_dept6 as d6
+ON a.car_reg = d6.car_reg AND a.month = d6.monthRecord AND a.year = d6.yearRecord
+LEFT JOIN v_drc_dept7 as d7
+ON a.car_reg = d7.car_reg AND a.month = d7.monthRecord AND a.year = d7.yearRecord
+LEFT JOIN v_drc_dept8 as d8
+ON a.car_reg = d8.car_reg AND a.month = d8.monthRecord AND a.year = d8.yearRecord
+LEFT JOIN v_drc_dept9 as d9 
+ON a.car_reg = d9.car_reg AND a.month = d9.monthRecord AND a.year = d9.yearRecord
+LEFT JOIN v_budget as b 
+ON a.car_reg = b.car_reg AND a.month = b.budget_month AND a.year = b.budget_year
+LEFT JOIN v_gasprice as g 
+ON a.car_reg = g.car_reg AND a.month = g.gas_price_month AND a.year = g.gas_price_year
+
+WHERE a.year = '$year' AND a.month = '$month'
+ORDER BY a.id,a.month,a.year";
+
+
+$feeCard = "SELECT a.name,b.month,b.year,b.card_no,SUM(b.amount) as amount,SUM(b.tax) as tax,SUM(b.adjust) as adjust, SUM(b.amount+b.tax+b.adjust) as total
+FROM tb_business as a LEFT JOIN v_feecard as b 
+ON a.id = b.bid AND b.month = '$month' AND b.year = '$year' AND b.status_id =1
+GROUP BY name
+ORDER BY a.id ASC";
+
+
